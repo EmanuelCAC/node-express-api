@@ -1,51 +1,17 @@
 import express from "express"
-import { products } from "../db-memory/products.js";
+import listAll from "../controllers/product/listAll.js";
+import create from "../controllers/product/create.js";
+import edit from "../controllers/product/edit.js";
+import remove from "../controllers/product/remove.js";
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-    res.json({
-        success: "Produtos listados com sucesso!",
-        products
-    })
-})
+router.get('/', listAll)
 
-router.post('/', (req, res) => {
-    const product = req.body
-    product.id = products[products.length - 1].id + 1;
-    products.push(product)
+router.post('/', create)
 
-    res.json({
-        success: "Usúario listados com sucesso!",
-        products
-    })
-})
+router.put('/', edit)
 
-router.put('/', (req, res) => {
-    const product = req.body
-    for (let i = 0; i < products.length; i++) {
-        if (products[i].id == product.id) {
-            products[i].name = product.name || products[i].name
-            products[i].preço = product.preço || products[i].preço
-            products[i].marca = product.marca || products[i].marca
-            products[i].categoria = product.categoria || products[i].categoria
-        }
-    }
-
-    res.json({
-        success: "Usúarios listados com sucesso!",
-        products
-    })
-})
-
-router.delete('/', (req, res) => {
-    const product = req.body
-    const newProduct = products.filter(products => products.id != product.id)
-
-    res.json({
-        success: "Usúarios listados com sucesso!",
-        newProduct
-    })
-})
+router.delete('/', remove)
 
 export default router

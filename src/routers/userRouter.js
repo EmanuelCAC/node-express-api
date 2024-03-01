@@ -1,50 +1,17 @@
 import express from "express"
-import { users } from "../db-memory/user.js";
+import listAll from "../controllers/user/listAll.js"
+import create from "../controllers/user/create.js";
+import edit from "../controllers/user/edit.js";
+import remove from "../controllers/user/remove.js";
 
 const router = express.Router()
 
-router.get('/', (req, res) => {
-	res.json({
-		success: "Usúarios listados com sucesso!",
-		users
-	})
-})
+router.get('/', listAll)
 
-router.post('/', (req, res) => {
-	const user = req.body
-	user.id = users[users.length - 1].id + 1;
-	users.push(user)
+router.post('/', create)
 
-	res.json({
-		success: "Usúario listados com sucesso!",
-		users
-	})
-})
+router.put('/', edit)
 
-router.put('/', (req, res) => {
-	const user = req.body
-	for (let i = 0; i < users.length; i++) {
-		if (users[i].id == user.id) {
-			users[i].name = user.name || users[i].name
-			users[i].email = user.email || users[i].email
-			users[i].avatar = user.avatar || users[i].avatar
-		}
-	}
-
-	res.json({
-		success: "Usúarios listados com sucesso!",
-		users
-	})
-})
-
-router.delete('/', (req, res) => {
-	const user = req.body
-	const newUser = users.filter(users => users.id != user.id)
-
-	res.json({
-		success: "Usúarios listados com sucesso!",
-		newUser
-	})
-})
+router.delete('/', remove)
 
 export default router

@@ -1,7 +1,61 @@
 import { products } from "../db-memory/products.js";
+import { z } from 'zod'
+
+const userSchema = z.object({
+  id: z
+    .number({
+      invalid_type_error: "O id deve ser numérico.",
+      required_error: "Id obrigatório"
+    }),
+  name: z
+    .string({
+      invalid_type_error: "O nome deve ser uma string.",
+      required_error: "Nome obrigatório"
+    })
+    .min(3, { message: "O nome do usuário deve ter ao menos 3 letras." })
+    .max(200, { message: "O nome do usuário deve ter ao menos 200 caracteres." }),
+  preço: z
+    .number({
+      invalid_type_error: "O preço deve ser numérico.",
+      required_error: "Preço obrigatório"
+    }),
+  marca: z
+    .string({
+      invalid_type_error: "A marca deve ser uma string.",
+      required_error: "Marca obrigatório"
+    }),
+  categoria: z
+    .string({
+      invalid_type_error: "A categoria deve ser uma string.",
+      required_error: "Categoria obrigatório"
+    }),
+})
+
+const validadeCreate = (product) => {
+  const partialUserSchema = userSchema.partial({ id: true })
+  return partialUserSchema.safeParse(product)
+}
+
+const validadeEdit = (product) => {
+  return userSchema.safeParse(product)
+}
+
+const validadeId = (id) => {
+  const partialUserSchema = userSchema.partial({
+    name: true,
+    preço: true,
+    marca: true,
+    categoria: true
+  })
+  return partialUserSchema.safeParse({ id })
+}
 
 const list = () => {
   return products
+}
+
+const getProduct = (id) => {
+  return products.find((product) => product.id === id)
 }
 
 const create = (product) => {
@@ -22,8 +76,8 @@ const edit = (product) => {
   return products
 }
 
-const remove = (produc) => {
-  return products.filter(products => products.id != produc.id)
+const remove = (product) => {
+  return products.filter(products => products.id != product.id)
 }
 
-export default { list, create, edit, remove }
+export default { list, create, edit, remove, validadeCreate, validadeEdit, validadeId, getProduct }

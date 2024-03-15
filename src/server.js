@@ -7,7 +7,7 @@ import productRouter from './routers/productsRouter.js'
 const app = express()
 
 app.use(express.json())
-app.use('/user', logger)
+app.use(logger)
 
 app.get('/', (req, res) => {
   res.json({ message: "Welcome to the API" })

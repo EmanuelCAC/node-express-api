@@ -1,5 +1,8 @@
 import { users } from "../db-memory/user.js"
 import { z } from 'zod'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const userSchema = z.object({
   id: z
@@ -46,18 +49,18 @@ const validadeId = (id) => {
   return partialUserSchema.safeParse({ id })
 }
 
-const list = () => {
-  return users
+const list = async () => {
+  return await prisma.user.findMany()
 }
 
 const getUser = (id) => {
   return users.find((user) => user.id === id)
 }
 
-const create = (user) => {
-  user.id = users[users.length - 1].id + 1;
-  users.push(user)
-  return users
+const create = async (user) => {
+  return await prisma.user.create({
+    data: user
+  })
 }
 
 const edit = (user) => {

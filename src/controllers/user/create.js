@@ -1,6 +1,6 @@
 import userModel from "../../models/userModel.js"
 
-const create = (req, res) => {
+const create = async (req, res) => {
   const user = req.body
   const validadeData = userModel.validadeCreate(user)
   if (!validadeData.success) {
@@ -9,10 +9,10 @@ const create = (req, res) => {
       fields: validadeData.error.flatten().fieldErrors
     })
   }
-  const result = userModel.create(user)
+  const result = await userModel.create(user)
   res.json({
-    success: "Usúario listados com sucesso!",
-    users: result
+    success: "Usúario listado com sucesso!",
+    user: result
   })
 }
 

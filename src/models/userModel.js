@@ -53,8 +53,12 @@ const list = async () => {
   return await prisma.user.findMany()
 }
 
-const getUser = (id) => {
-  return users.find((user) => user.id === id)
+const getUser = async (id) => {
+  return await prisma.user.findUnique({
+    where: {
+      id
+    }
+  })
 }
 
 const create = async (user) => {
@@ -63,19 +67,21 @@ const create = async (user) => {
   })
 }
 
-const edit = (user) => {
-  for (let i = 0; i < users.length; i++) {
-    if (users[i].id == user.id) {
-      users[i].name = user.name || users[i].name
-      users[i].email = user.email || users[i].email
-      users[i].avatar = user.avatar || users[i].avatar
-    }
-  }
-  return users
+const edit = async (user) => {
+  return await prisma.user.update({
+    where: {
+      id: user.id
+    },
+    data: user
+  })
 }
 
-const remove = (user) => {
-  return users.filter(users => users.id != user.id)
+const remove = async (user) => {
+  return await prisma.user.delete({
+    where: {
+      id: user.id
+    }
+  })
 }
 
 export default { list, getUser, create, edit, remove, validadeCreate, validadeEdit, validadeId }

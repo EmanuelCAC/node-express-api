@@ -1,9 +1,9 @@
 import productModel from "../../models/productModel.js"
 
-const listAll = (req, res) => {
+const listAll = async (req, res) => {
   res.json({
     success: "Produtos listados com sucesso!",
-    products: productModel.list()
+    products: await productModel.list()
   })
 }
 

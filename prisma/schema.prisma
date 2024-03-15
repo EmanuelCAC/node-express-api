@@ -10,9 +10,9 @@ datasource db {
 model product {
   id        Int    @id @default(autoincrement())
   name      String @db.VarChar(200)
-  value     Int
-  categoty  String @db.VarChar(50)
-  photo     String @db.Text
+  value     Float
+  category  String @db.VarChar(50)
+  brand     String @db.VarChar(50)
 }
 
 model user {

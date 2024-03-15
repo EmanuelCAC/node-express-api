@@ -1,6 +1,6 @@
 import productModel from "../../models/productModel.js";
 
-const remove = (req, res) => {
+const remove = async (req, res) => {
   const { id } = req.params
   const validadeData = productModel.validadeId(+id)
   if (!validadeData.success) {
@@ -9,7 +9,7 @@ const remove = (req, res) => {
       fields: validadeData.error.flatten().fieldErrors
     })
   }
-  const result = productModel.remove(validadeData.data)
+  const result = await productModel.remove(validadeData.data)
 
   res.json({
     success: "Usúarios listados com sucesso!",

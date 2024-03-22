@@ -28,7 +28,13 @@ const userSchema = z.object({
       invalid_type_error: "O avatar deve ser uma string.",
       required_error: "Avatar obrigatório"
     })
-    .url({ message: "Url do avata invalido." })
+    .url({ message: "Url do avata invalido." }),
+  pass: z
+    .string({
+      invalid_type_error: "A senha deve ser uma string.",
+      required_error: "Senha obrigatório"
+    })
+    .min(6, { message: "A senha do usuário deve ter ao menos 6 caracteres" })
 })
 
 const validadeCreate = (user) => {
@@ -37,27 +43,50 @@ const validadeCreate = (user) => {
 }
 
 const validadeEdit = (user) => {
-  return userSchema.safeParse(user)
+  const partialUserSchema = userSchema.partial({ pass: true })
+  return partialUserSchema.safeParse(user)
 }
 
 const validadeId = (id) => {
   const partialUserSchema = userSchema.partial({
     name: true,
     email: true,
-    avatar: true
+    avatar: true,
+    pass: true
   })
   return partialUserSchema.safeParse({ id })
 }
 
 const list = async () => {
-  return await prisma.user.findMany()
+  return await prisma.user.findMany({
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatar: true
+    }
+  })
 }
 
 const getUser = async (id) => {
   return await prisma.user.findUnique({
     where: {
       id
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatar: true
     }
+  })
+}
+
+const getUserByEmail = async (email) => {
+  return await prisma.user.findUnique({
+    where: {
+      email
+    },
   })
 }
 
@@ -72,7 +101,13 @@ const edit = async (user) => {
     where: {
       id: user.id
     },
-    data: user
+    data: user,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      avatar: true
+    }
   })
 }
 
@@ -84,4 +119,4 @@ const remove = async (user) => {
   })
 }
 
-export default { list, getUser, create, edit, remove, validadeCreate, validadeEdit, validadeId }
+export default { list, getUser, create, edit, remove, validadeCreate, validadeEdit, validadeId, getUserByEmail }

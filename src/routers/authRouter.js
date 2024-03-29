@@ -3,6 +3,8 @@ import login from "../controllers/auth/login.js"
 
 const router = express.Router()
 
-router.get('/login', login)
+router.post('/login', login)
+router.post('/logout', () => { })
+router.post('/refresh-token', () => { })
 
 export default router

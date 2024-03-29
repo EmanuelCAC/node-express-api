@@ -2,6 +2,9 @@ import userModel from "../../models/userModel.js"
 import { compare } from "bcrypt"
 import jwt from 'jsonwebtoken'
 
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const login = async (req, res) => {
   const { email, pass } = req.body
@@ -39,6 +42,14 @@ const login = async (req, res) => {
       expiresIn: '3m'
     }
   )
+
+  prisma.session.create({
+    data: {
+      user_id: userFound.id,
+      client: "API DOG",
+      token: refreshToken
+    }
+  })
 
   delete userFound.pass
   return res.json({

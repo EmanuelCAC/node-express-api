@@ -6,7 +6,12 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 const refreshToken = async (req, res) => {
-  const token = req.headers.authorization?.split(' ')[1]
+  let token = false
+
+  token = req?.cookies?.refreshToken
+
+  const authorization = req.headers?.authorization
+  if(authorization) token = authorization.split(' ')[1]
 
   if (!token) return res.status(401).json({
     error: "Usuário não autenticado",

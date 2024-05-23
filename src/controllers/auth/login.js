@@ -52,6 +52,9 @@ const login = async (req, res) => {
   })
 
   delete userFound.pass
+
+  res.cookie('refreshToken', refreshToken, { httpOnly: true, sameSite: 'None', secure: true, maxAge: 3 * 30 * 24 * 60 * 60 * 1000 })
+
   return res.json({
     success: `Usuário do login!`,
     user: userFound,
